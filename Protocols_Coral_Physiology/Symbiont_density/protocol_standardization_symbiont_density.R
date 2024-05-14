@@ -1,0 +1,46 @@
+# Title: 
+# Author:
+# Date: 
+# Input files:
+#  
+# Output files: 
+# 
+# Notes
+
+# Libraries ---------------------------------------------------------------
+
+library(tidyverse)
+
+sym_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Phys_CHL_sym/TLAP_Sym_D_Counts.csv"
+meta_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Raw_Data/TLAP_ALL_Results.csv"
+output_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Raw_Data/TLAP_Sym_Standardized.csv"
+
+# Data -------------------------------------------------------------------
+
+#raw symbiont data 
+sym <- read.csv(paste(sym_path)) %>%
+  select(sample_id,average_per_square) %>%
+  filter(average_per_square !="#DIV/0!") 
+
+# Load homogenate volume
+meta <- read_csv(paste(meta_path)) %>%                                              #####
+select(sample_id, airbrush_volume,surface_area) %>%
+  filter(!is.na(airbrush_volume)) 
+
+# standardize -------------------------------------------------------------------
+# Join DF with homogenate 
+sym <- full_join(sym, meta)
+
+# Multiply chlorophyll by the homogenate volume and divide by surface area
+sym2 <- sym %>%
+  filter(!is.na(surface_area)) %>%
+  mutate(sym.cm2 = as.numeric(average_per_square) * as.numeric(airbrush_volume) / as.numeric(surface_area))
+
+sym_small <- sym2 %>%
+  select(sample_id,sym.cm2) 
+  #%>% filter(as.numeric(CV) <= 15)
+
+# write the file 
+write.csv(sym_small, paste(output_path))    
+
+
