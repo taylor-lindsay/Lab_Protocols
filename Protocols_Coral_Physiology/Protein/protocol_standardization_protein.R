@@ -21,6 +21,10 @@ library(plotrix)
 
 # Data prep ---------------------------------------------------------------
 
+prot_path <- "~/Desktop/GitHub/TLPR21_2/Protein/TLPR21_protein_raw_files/" 
+surface_path <- "~/Desktop/GITHUB/TLPR21_2/Surface_Area/TLPR21_Surface_Area.csv"
+vol_path <- "~/Desktop/GITHUB/TLPR21_2/TLPR21_Raw_Master.csv"
+output_path <- '~/Desktop/GITHUB/TLPR21_2/Protein/TLPR21_Protein_Results.csv'
 
 # Define function to read in protein data
 read_prot <- function(file) {
@@ -33,8 +37,6 @@ read_prot <- function(file) {
 }
 
 # List chlorophyll data files
-#prot_path <- "~/Desktop/GitHub/TLPR21/Protein/TLPR21/"                  # Path to chlorophyll data directory     #####
-prot_path <- "~/Desktop/GitHub/TL_Astrangia/Protein/" 
 all_prot_files <- list.files(path = prot_path, pattern = "*.csv")          # List all files in directory
 prot_platemaps <- list.files(path = prot_path, pattern = "platemap")       # List platemap files
 prot_data_files <- setdiff(all_prot_files, prot_platemaps)                  # List absorbance data files
@@ -49,14 +51,12 @@ df <- df %>%
   mutate(merged = map2(platemap, prot_data, ~ right_join(.x, .y)))
 
 # Load homogenate volume
-#homog_vols <- read_csv("~/Desktop/GITHUB/TLPR21/TLPR21_Results.csv") %>%                                              #####
-homog_vols <- read_csv("~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Raw_Master.csv") %>%                                              #####
+homog_vols <- read_csv(paste(vol_path)) %>%                                              #####
 select(sample_id, airbrush_volume) %>%
   filter(!is.na(airbrush_volume))
 
 # Load surface area
-#sa <- read_csv("~/Desktop/GITHUB/TLPR21/TLPR21_Results.csv") %>%                                #####
-sa <- read_csv("~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Surface_Area.csv") %>%    
+sa <- read_csv(paste(surface_path)) %>%    
 select(sample_id, surface_area) %>%
   filter(!is.na(surface_area))
 
@@ -138,5 +138,4 @@ prot <- left_join(prot, metadata) %>%
 
 protein <- prot %>% ungroup() %>% select(sample_id, prot_ug.cm2, prot_mg.cm2, prot_ug) 
 
-#write.csv(protein, '~/Desktop/GITHUB/TLPR21/Protein/TLPR21_Protein_Results.csv') 
-write.csv(protein, '~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Results_protein.csv')
+write.csv(protein, paste(output_path))

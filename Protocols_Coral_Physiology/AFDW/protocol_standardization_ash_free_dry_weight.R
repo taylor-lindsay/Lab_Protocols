@@ -15,47 +15,49 @@ library(tidyr)
 library(ggplot2)
 library(dplyr)
 
-AFDW_path <- "~/Desktop/GITHUB/TLPR21/AFDW/TLPR21_AFDW.csv"
-meta_path <- "~/Desktop/GITHUB/TLPR21/TLPR21_Raw_Master.csv"
-surface_path <-"~/Desktop/GITHUB/TLPR21/Surface_Area/TLPR21_Surface_Area.csv"
-output_path <- "~/Desktop/GITHUB/TLPR21/AFDW/TLPR21_AFDW_Results.csv"
+AFDW_path <- "~/Desktop/GITHUB/TLPR21_2/AFDW/TLPR21_AFDW.csv"
+meta_path <- "~/Desktop/GITHUB/TLPR21_2/TLPR21_Raw_Master.csv"
+surface_path <-"~/Desktop/GITHUB/TLPR21_2/Surface_Area/TLPR21_Surface_Area.csv"
+output_path <- "~/Desktop/GITHUB/TLPR21_2/AFDW/TLPR21_AFDW_Results.csv"
 
 #AFDW data
 AFDW <- read.csv(paste(AFDW_path)) %>%
-  select(colony_id,sym_host,AFDW.g.ml)
+  select(sample_id,sym_host,AFDW.g.ml)
 
 # Load homogenate volume
 vol <- read_csv(paste(meta_path)) %>%                                              #####
-select(colony_id, airbrush_volume) %>%
+select(sample_id, airbrush_volume) %>%
   filter(!is.na(airbrush_volume))
 
 # Load surface area
 sa <- read_csv(paste(surface_path)) %>%                                #####
-select(colony_id, surface_area) %>%
+select(sample_id, surface_area) %>%
   filter(!is.na(surface_area))
 
 # Merge & Edit Data -------------------------------------------------------
 
+# filter negatives and remove duplicates 
+AFDW2 <- AFDW %>%
+  filter(., AFDW.g.ml > 0)%>%
+  group_by(sample_id, sym_host) %>%
+  summarise(AFDW_mean = mean(AFDW.g.ml))
+
 #separate sym and host data 
-
-
-Sym <- AFDW %>%
+Sym <- AFDW2 %>%
   filter(.,sym_host=="SYM") %>%
-  filter(.,AFDW.g.ml>0)%>%
-  setNames(c("colony_id","sym_host","AFDW_sym")) %>%
-  .[,c(1,3)]
+  setNames(c("sample_id","sym_host","AFDW_sym")) %>%
+  select(c(sample_id, AFDW_sym))
 
-Host <- AFDW %>%
+Host <- AFDW2 %>%
   filter(.,sym_host=="HOST") %>%
-  filter(.,AFDW.g.ml>0)%>%
-  setNames(c("colony_id","sym_host","AFDW_host")) %>%
-  .[,c(1,3)]
+  setNames(c("sample_id","sym_host","AFDW_host")) %>%
+  select(c(sample_id, AFDW_host))
 
 #merge two together
 merged1 <- full_join(Sym,Host)
 #merge with metadata 
-AFDW_Merge <- full_join(sa,merged1, by="colony_id")
-AFDW_Merge <- full_join(vol,AFDW_Merge, by="colony_id")
+AFDW_Merge <- full_join(sa,merged1, by="sample_id")
+AFDW_Merge <- full_join(vol,AFDW_Merge, by="sample_id")
 
 # Original data was g/ml
 
@@ -65,9 +67,9 @@ AFDW_fin <- AFDW_Merge %>%
 
 # just the columns I want 
 AFDW_small <- AFDW_fin %>%
-  select(colony_id, Host_AFDW_mg.cm2, Sym_AFDW_mg.cm2)
+  select(sample_id, Host_AFDW_mg.cm2, Sym_AFDW_mg.cm2)
 
-ggplot(AFDW_small, aes(x=colony_id,y=Sym_AFDW_mg.cm2)) +
+ggplot(AFDW_small, aes(x=sample_id,y=Sym_AFDW_mg.cm2)) +
   geom_point()
 
 # write the file 

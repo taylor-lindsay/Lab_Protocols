@@ -15,9 +15,9 @@ library(ggplot2)
 theme_set(theme_bw())
 
 # update the paths of the data as needed 
-raw_path <- "~/Desktop/GITHUB/TL_Astrangia/Lipids/TLAP_Lipid_Extraction.csv"
-meta_path <- "~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_ALL_Results.csv"
-output_path <-"~/Desktop/GITHUB/TL_Astrangia/Raw_Data/TLAP_lipids_Standardized.csv"
+raw_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Phys_Lipids/TLAP_Lipid_Extraction.csv"
+meta_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Raw_Data/TLAP_ALL_Results.csv"
+output_path <-"~/Desktop/GITHUB/TL_Astrangia/TLAP_Results/TLAP_lipids_Standardized.csv"
 
 # Load raw lipids data
 raw <- read_csv(paste(raw_path)) %>%

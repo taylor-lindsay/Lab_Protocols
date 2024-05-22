@@ -21,8 +21,13 @@ if (!require("plotrix")) install.packages("plotrix")
 library(plotrix)
 library(tidyverse)
 
-
 # Import Data -------------------------------------------------------------
+
+chl_path <- "~/Desktop/GITHUB/TLPR21_2/CHL/TLPR21_CHL_raw_files/"                         
+surface_path <- "~/Desktop/GITHUB/TLPR21_2/Surface_Area/TLPR21_Surface_Area.csv"
+vol_path <- "~/Desktop/GITHUB/TLPR21_2/TLPR21_Raw_Master.csv"
+output_path <- '~/Desktop/GITHUB/TLPR21_2/CHL/TLPR21_Results_CHL.csv'
+
 
 # Define function to read in chl data
 read_chl <- function(file) {
@@ -35,7 +40,6 @@ read_chl <- function(file) {
 }
 
 # List chlorophyll data files
-chl_path <- "~/Desktop/GITHUB/TL_Astrangia/CHL/"                        # Path to chlorophyll data directory     #####
 all_chl_files <- list.files(path = chl_path, pattern = "*.csv")          # List all files in directory
 chl_platemaps <- list.files(path = chl_path, pattern = "platemap")       # List platemap files
 chl_data_files <- setdiff(all_chl_files, chl_platemaps)                  # List absorbance data files
@@ -50,12 +54,12 @@ df <- df %>%
   mutate(merged = map2(platemap, chl_data, ~ right_join(.x, .y)))
 
 # Load homogenate volume
-vol <- read_csv("~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Raw_master.csv") %>%                                              #####
+vol <- read_csv(paste(vol_path)) %>%                                           
   select(sample_id, airbrush_volume) %>%
   filter(!is.na(airbrush_volume))
 
 # Load surface area
-sa <- read_csv("~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Surface_Area.csv") %>%                                #####
+sa <- read_csv(paste(surface_path)) %>%                              
   select(sample_id, surface_area) %>%
   filter(!is.na(surface_area))
 
@@ -116,60 +120,4 @@ chl %>%
   #mutate(timepoint="FEB")%>%
   filter(!is.na(chla.ug.cm2))%>%
   filter(!is.na(chlc2.ug.cm2))%>%
-  write.csv(., '~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Results_CHL.csv')                                  #####
-
-
-# Plots -------------------------------------------------------------------
-
-# Q: Is there a difference between site?
-# A: meh 
-
-chl%>%
-  filter(!is.na(chla.ug.cm2)) %>%
-  ggplot(aes(x=colony_id, y=chla.ug.cm2)) +
-  #facet_wrap(~species) +
-  labs(x = "", y = "chlorophyll a (µg/cm2)") +
-  geom_boxplot()
-chl%>%
-  filter(!is.na(chlc2.ug.cm2)) %>%
-  ggplot(aes(x=colony_id, y=chlc2.ug.cm2)) +
-  #facet_wrap(~species) +
-  labs(x = "", y = "chlorophyll a (µg/cm2)") +
-  geom_boxplot()
-
-
-# Q: Is there a difference between species
-# A: maybe? 
-chl %>%
-  filter(!is.na(chla.ug.cm2)) %>%
-  ggplot(aes(x=species, y=chla.ug.cm2)) +
-  labs(x = "", y = "chlorophyll a (µg/cm2)") +
-  geom_boxplot()
-chl %>%
-  filter(!is.na(chlc2.ug.cm2)) %>%
-  ggplot(aes(x=species, y=chlc2.ug.cm2)) +
-  labs(x = "", y = "chlorophyll a (µg/cm2)") +
-  geom_boxplot()
-
-
-# Q: Is there a difference between act depths
-# A: maybe? 
-  
-chl %>%
-  filter(!is.na(chla.ug.cm2)) %>%
-  ggplot(aes(x=act_depth, y=chla.ug.cm2)) +
-  facet_wrap(~species) +
-  geom_point() + 
-  labs(x = "", y = "chlorophyll a (µg/cm2)") +
-  geom_smooth(method=lm)
-chl %>%
-  filter(!is.na(chlc2.ug.cm2)) %>%
-  ggplot(aes(x=act_depth, y=chlc2.ug.cm2)) +
-  facet_wrap(~species) +
-  geom_point() + 
-  labs(x = "", y = "chlorophyll a (µg/cm2)") +
-  geom_smooth(method=lm)
-
-
-# Statistics  -------------------------------------------------------------------
-
+  write.csv(., paste(output_path))                                

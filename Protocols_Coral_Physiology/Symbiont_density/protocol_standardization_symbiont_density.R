@@ -11,15 +11,22 @@
 
 library(tidyverse)
 
+
+# TLAP
 sym_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Phys_CHL_sym/TLAP_Sym_D_Counts.csv"
 meta_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Raw_Data/TLAP_ALL_Results.csv"
 output_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Raw_Data/TLAP_Sym_Standardized.csv"
+
+#TLPR21
+#sym_path <- '~/Desktop/GITHUB/TLPR21_2/Sym_density/TLPR21_Sym_D_Counts.csv'
+#meta_path <- '~/Desktop/GITHUB/TLPR21_2/TLPR21_Raw_Master.csv'
+#output_path <- '~/Desktop/GITHUB/TLPR21_2/Sym_density/TLPR21_Sym_Results.csv'
 
 # Data -------------------------------------------------------------------
 
 #raw symbiont data 
 sym <- read.csv(paste(sym_path)) %>%
-  select(sample_id,average_per_square) %>%
+  select(sample_id,average_per_square,CV) %>%
   filter(average_per_square !="#DIV/0!") 
 
 # Load homogenate volume
@@ -37,10 +44,9 @@ sym2 <- sym %>%
   mutate(sym.cm2 = as.numeric(average_per_square) * as.numeric(airbrush_volume) / as.numeric(surface_area))
 
 sym_small <- sym2 %>%
-  select(sample_id,sym.cm2) 
-  #%>% filter(as.numeric(CV) <= 15)
+  #filter(as.numeric(CV) <= 15)  %>% 
+  select(sample_id,sym.cm2)
 
 # write the file 
 write.csv(sym_small, paste(output_path))    
-
 
