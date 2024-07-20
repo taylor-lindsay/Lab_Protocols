@@ -41,7 +41,7 @@ sym <- full_join(sym, meta)
 # Multiply chlorophyll by the homogenate volume and divide by surface area
 sym2 <- sym %>%
   filter(!is.na(surface_area)) %>%
-  mutate(sym.cm2 = as.numeric(average_per_square) * as.numeric(airbrush_volume) / as.numeric(surface_area))
+  mutate(sym.cm2 = (as.numeric(average_per_square)*10000) * as.numeric(airbrush_volume) / as.numeric(surface_area))
 
 sym_small <- sym2 %>%
   #filter(as.numeric(CV) <= 15)  %>% 
