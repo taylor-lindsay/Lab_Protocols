@@ -41,9 +41,9 @@ lipids <- full_join(raw_means, meta)
 # Multiply lipids & AFDW by the homogenate volume and divide by surface area
 lipids_results <- lipids %>%
   filter(!is.na(surface_area)) %>%
-  mutate(AFDW.cm2 = as.numeric(AFDW) * as.numeric(airbrush_volume) / as.numeric(surface_area)) %>%
+  mutate(AFDW.mg.cm2 = as.numeric(AFDW*1000) * as.numeric(airbrush_volume) / as.numeric(surface_area)) %>%
   mutate(lipids.mg.cm2 = as.numeric(total_lipids*1000) * as.numeric(airbrush_volume) / as.numeric(surface_area)) %>%
-  select(c(sample_id, percent_lipids, AFDW.cm2, lipids.mg.cm2)) %>%
+  select(c(sample_id, percent_lipids, AFDW.mg.cm2, lipids.mg.cm2)) %>%
   filter(!is.na(lipids.mg.cm2))
 
 # write the file 
