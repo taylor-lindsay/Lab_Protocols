@@ -17,9 +17,9 @@ meta_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Raw_Data/TLAP_ALL_Results.csv"
 output_path <- "~/Desktop/GITHUB/TL_Astrangia/TLAP_Raw_Data/TLAP_Sym_Standardized.csv"
 
 #TLPR21
-#sym_path <- '~/Desktop/GITHUB/TLPR21_2/Sym_density/TLPR21_Sym_D_Counts.csv'
-#meta_path <- '~/Desktop/GITHUB/TLPR21_2/TLPR21_Raw_Master.csv'
-#output_path <- '~/Desktop/GITHUB/TLPR21_2/Sym_density/TLPR21_Sym_Results.csv'
+sym_path <- '~/Desktop/GITHUB/TLPR21_2/Sym_density/TLPR21_Sym_D_Counts_Passed_Counts.csv'
+meta_path <- '~/Desktop/GITHUB/TLPR21_2/TLPR21_Raw_Master.csv'
+output_path <- '~/Desktop/GITHUB/TLPR21_2/Sym_density/TLPR21_Sym_Results.csv'
 
 # TL_Trans
 sym_path <- "~/Desktop/GITHUB/TL_Trans/Sym/TL_Trans_Sym_D_Counts.csv"
