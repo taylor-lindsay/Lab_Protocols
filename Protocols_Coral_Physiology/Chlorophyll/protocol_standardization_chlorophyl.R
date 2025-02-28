@@ -23,11 +23,17 @@ library(tidyverse)
 
 # Import Data -------------------------------------------------------------
 
+# TLPR21 Path 
 chl_path <- "~/Desktop/GITHUB/TLPR21_2/CHL/TLPR21_CHL_raw_files/"                         
 surface_path <- "~/Desktop/GITHUB/TLPR21_2/Surface_Area/TLPR21_Surface_Area.csv"
 vol_path <- "~/Desktop/GITHUB/TLPR21_2/TLPR21_Raw_Master.csv"
 output_path <- '~/Desktop/GITHUB/TLPR21_2/CHL/TLPR21_Results_CHL.csv'
 
+# TLPR21 Path 
+chl_path <- "~/Desktop/Matias_samples/Chlorophyll/raw/"                         
+surface_path <- "~/Desktop/Matias_samples/MGPR21_Raw.csv"
+vol_path <- "~/Desktop/Matias_samples/MGPR21_Raw.csv"
+output_path <- '~/Desktop/Matias_samples/Chlorophyll/MGPR21_Results_CHL.csv'
 
 # Define function to read in chl data
 read_chl <- function(file) {
